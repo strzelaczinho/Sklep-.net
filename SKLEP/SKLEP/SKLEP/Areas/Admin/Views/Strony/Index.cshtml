@@ -1,0 +1,91 @@
+﻿@model IEnumerable<SKLEP.Models.ViewModels.Strony.StronaVM>
+
+@{
+    ViewBag.Title = "Strony";
+}
+
+<h2>Lista Stron</h2>
+<!-- templatka jako Lista-->
+<p>
+    @Html.ActionLink("Dodaj nową stronę", "Dodawanie")
+</p>
+
+
+@if (!Model.Any())
+{
+    <h1 class="text-center">Nie ma żadnych stron</h1>
+}
+else
+{
+    <table class="table sorting" id="pages" >
+        <tr class="home">
+            <th>
+                Tytuł
+            </th>
+            <th>
+                Slug
+            </th>
+            <th>
+                CzyPosiadaPanel
+            </th>
+            <th></th>
+        </tr>
+        @foreach (var item in Model)
+        {
+
+            <tr id="id_@item.Id" class="@item.Slug">
+                <td>
+                    @Html.DisplayFor(modelItem => item.Tytuł)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Slug)
+                </td>
+               
+
+                <td>
+                    @Html.DisplayFor(modelItem => item.CzyPosiadaPanel)
+                </td>
+                <td>
+                    @Html.ActionLink("Edycja", "Edycja", new { id = item.Id }) |  <!-- przekazuje rowniez item.id -->
+                    @Html.ActionLink("Szczegóły", "Szczegóły", new { id = item.Id }) |
+                    @if (item.Slug != "home")
+                    {
+                        @Html.ActionLink("Usuń", "Usuwanie", new { id = item.Id }, new { @class = "usun" })
+                    }
+                </td>
+            </tr>
+        }
+
+    </table>
+}
+
+
+@section Scripts {
+    <script src="https://code.jquery.com/ui/1.12.0/jquery-ui.js"></script>
+    <script>
+        $(function () {
+
+            $("a.usun").click(function () {
+                if (!confirm("Czy na pewno chcesz usunać te stronę")) return false;
+            });
+            //////////////////////////////////////////////////////////////
+           
+          /*   * Numeracja   */
+           
+            $("table#pages tbody").sortable({ // table z id pages , tbody dla <tr> ow 
+                items: "tr:not(.home)", // dla wszystkich itemow ktore nie sa home
+                placeholder: "ui-state-highlight", // animacja , czyli area gdzie cos zostanie upuszczone dropped
+                update: function () {
+                    var ids = $("table#pages tbody").sortable("serialize");
+                    var url = "/Admin/Strony/ReorderPages";
+
+                    $.post(url, ids, function (data) {
+                    });
+                }
+            });
+
+            //////////////////////////////////////////////////////////////
+        });
+    </script>
+}
+

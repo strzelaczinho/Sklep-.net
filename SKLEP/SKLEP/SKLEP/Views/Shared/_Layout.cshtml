@@ -1,0 +1,132 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>@ViewBag.Title SKLEP</title>
+    @Styles.Render("~/Content/css")
+    @Scripts.Render("~/bundles/modernizr")
+</head>
+<body>
+    <div class="navbar navbar-inverse navbar-fixed-topcancel">
+        <div class="container">
+            <div class="navbar-header">
+                <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+               <a href="/" class="navbar-brand">SKLEP CMS</a>
+            </div>
+            <div class="navbar-collapse collapse">
+                <ul class="nav navbar-nav">
+
+                    <!--Html.Action("StronyPartial", "Pages");  -->
+                    @if (Request.IsAuthenticated)
+                    {
+                        <li><a href="/Konto/Orders">Twoje Zamowienia</a></li>
+                        <li><a href="/konto/logout">Logout</a></li>
+                    }
+                    else
+                    {
+                        if (ViewBag.Title == "Login")
+                        {
+                            <li class="active"><a href="/konto/login">Login</a></li>
+                        }
+                        else
+                        {
+                            <li><a href="/konto/login">Login</a></li>
+                        }
+
+                    }
+
+                    @if (Request.IsAuthenticated && User.IsInRole("Uzytkownik"))
+                    {
+                        if (ViewBag.Title == "UserProfile" || ViewBag.Title == "Orders")
+                        {
+
+                            <li class="active">@Html.Action("UserNavPartial", "Konto", new { area = "" })</li>
+                        }
+                        else
+                        {
+                            <li>@Html.Action("UserNavPartial", "Konto", new { area = "" })</li>
+                        }
+
+                    }
+                </ul>
+                @if (Request.IsAuthenticated && User.IsInRole("Admin"))
+                {
+                    <ul class="navbar-collapse collapse navbar-right adminarea">
+                        <li>@Html.ActionLink("Admin Area", "Index", "Tablica", new { area = "Admin" },null);</li>
+                    </ul>
+                }
+                else
+                {
+                    if (ViewBag.Title != "Koszyk Detail")
+                    {
+                        <ul class="navbar-collapse collapse navbar-right">
+                            @Html.Action("KoszykPartial", "Koszyk");
+                        </ul>
+                    }
+                }
+            </div>
+        </div>
+    </div>
+    <div class="container body-content">
+        <div class="row">
+            <div class="ajaxbg"><span><img src="~/Content/Img/ajax-loader.gif" /></span></div>
+            @if (ViewBag.Title != "Stworz Konto" &&
+               ViewBag.Title != "Login" &&
+               ViewBag.Title != "UserProfile" &&
+               ViewBag.Title != "Orders"
+               )
+            {
+                <div class="col-xs-12 col-md-2">
+                    @Html.Action("KategoriePartial", "Shop");
+                </div>
+            }
+            @if (ViewBag.Title == "UserProfile")
+            {
+                <div class="col-xs-12 col-md-2">
+                    <ul>
+                        <li><a href="/konto/orders">Moje zamowienia</a></li>
+                    </ul>
+                </div>
+            }
+
+            @if (ViewBag.Title == "Orders")
+            {
+                <div class="col-xs-12 col-md-2">
+                    <ul>
+                        <li><a href="/konto/user-profile">Moje zamowienia</a></li>
+                    </ul>
+                </div>
+            }
+
+            @if (ViewBag.Sidebar == "Yes")
+            {
+                <div class="col-xs-12 col-md-7">
+                    @RenderBody()
+                </div>
+                <div class="col-xs-12 col-md-3">
+                    @Html.Action("PanelPartial", "Pages");
+                </div>
+            }
+            else
+            {
+                <div class="col-xs-12 col-md-10">
+                    @RenderBody()  <!--kiedy nie ma sidebara-->
+                </div>
+            }
+        </div>
+        <hr />
+        <footer>
+            <p>&copy; @DateTime.Now.Year - My ASP.NET Application</p>
+        </footer>
+    </div>
+
+    @Scripts.Render("~/bundles/scripts")
+    @RenderSection("scripts", required: false)
+</body>
+</html>

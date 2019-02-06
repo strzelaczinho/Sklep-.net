@@ -1,0 +1,7 @@
+﻿@model SKLEP.Models.ViewModels.Koszyk.KoszykVM
+
+<div class="ajaxcart" style="color:white;">
+    Twoj koszyk: @Model.Ilosc produkt(y)  @Model.Cena
+    <br />
+    @Html.ActionLink("Checkout", "Index")
+</div>

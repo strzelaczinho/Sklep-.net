@@ -1,0 +1,109 @@
+﻿@model IEnumerable<SKLEP.Models.ViewModels.Strony.ProduktyVM>
+
+@{
+    ViewBag.Title = "Produkty";
+}
+
+@using PagedList.Mvc;
+@using PagedList;
+<h2>Produkty</h2>
+<select id="SelectCategory" name="SelectCategory">
+    <option value="0">All</option>
+    @foreach (var item in ViewBag.Categories)
+    {
+        if (ViewBag.SelectedCat == item.Value)
+        {
+            <option selected="selected" value="@item.Value">@item.Text</option> <!-- value to id kategorii, text to nazwa kategorii-->
+        }
+        else
+        {
+            <option value="@item.Value">@item.Text</option>
+        }
+    }
+
+</select>
+<p>
+    @Html.ActionLink("Dodaj nowy produkt", "DodajProdukt")
+</p>
+<table class="table">
+    <tr>
+        <th>
+            Nazwa
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Slug)
+        </th>
+        <th>
+            Cena
+        </th>
+        <th>
+            Obrazek
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Opis)
+        </th>
+
+        <th></th>
+    </tr>
+    @foreach (var produkt in ViewBag.OnePageOfProducts)
+    {
+        <tr>
+            <td>
+                @produkt.Nazwa
+            </td>
+            <td>
+                @produkt.Slug
+            </td>
+            <td>
+                @produkt.Cena
+            </td>
+
+
+            <td>
+                <a href="/Admin/Sklepowy/EdycjaProduktu/@produkt.Id">
+                    <img src="/Zdjecia/Uploads/Produkty/@produkt.Id/Thumbs/@produkt.NazwaZdjecia" />
+                </a>
+
+            </td>
+            <td>
+                @produkt.Opis
+            </td>
+            <td>
+                @Html.ActionLink("Edycja", "EdycjaProduktu", new { id = produkt.Id }) |
+                @Html.ActionLink("Usun", "UsunProdukt", new { id = produkt.Id },new { @class="usun"})
+            </td>
+        </tr>
+    }
+
+
+</table>
+@Html.PagedListPager((IPagedList)ViewBag.OnePageOfProducts, numer => Url.Action("Produkty", new { numer, catId = ViewBag.SelectedCat }))
+@section Scripts {
+    <script src="http://code.jquery.com/ui/1.12.0/jquery-ui.min.js"></script>
+    <script>
+
+$(function () {
+    /*
+    * Zaznacz produkt ze specyficznej kategori
+    */
+    $("#SelectCategory").on("change", function () {
+        var url = $(this).val(); // wartosc option value czyli nr Kategorii
+
+        if (url) { // jesli cos tam jest
+            window.location = "/Admin/Sklepowy/Produkty?catId=" + url; // id pobrane z linka. catid czyli wartosc przekazywana do metody jako catId = ViewBag.SelectedCat powyzej
+        }
+
+        return false;
+    });
+    //////////////////////////////////////////////////////////////
+    /*
+    * Potwierdz usuneicie produktu
+    */
+    $("a.usun").click(function () {
+        if (!confirm("Potwierdz usuniecie produktu")) return false;
+    });
+    //////////////////////////////////////////////////////////////
+});
+    </script>
+
+}

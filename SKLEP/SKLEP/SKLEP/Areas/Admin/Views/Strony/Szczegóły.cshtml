@@ -1,0 +1,49 @@
+﻿@model SKLEP.Models.ViewModels.Strony.StronaVM
+
+@{
+    ViewBag.Title = "Szczegóły";
+}
+
+<h2>Szczegóły</h2>
+
+<div>
+    <hr />
+    <dl class="dl-horizontal">
+        <dt>
+            @Html.DisplayNameFor(model => model.Tytuł)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Tytuł)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Slug)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Slug)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Opis)
+        </dt>
+
+        <dd>
+            @Html.Raw(Model.Opis)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.CzyPosiadaPanel)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.CzyPosiadaPanel)
+        </dd>
+
+    </dl>
+</div>
+<p>
+    @Html.ActionLink("Edycja", "Edycja", new { id = Model.Id }) |
+    @Html.ActionLink("Powrót", "Index")
+</p>

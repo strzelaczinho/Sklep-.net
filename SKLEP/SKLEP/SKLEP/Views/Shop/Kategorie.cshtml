@@ -1,0 +1,50 @@
+﻿@model IEnumerable<SKLEP.Models.ViewModels.Strony.ProduktyVM>
+
+@{
+    ViewBag.Title = ViewBag.CategoryName;
+}
+
+
+
+<table class="table">
+    <tr>
+        <th>
+           Name
+        </th>
+        
+        <th>
+           Opis
+        </th>
+        <th>
+            Cena
+        </th>
+       
+        <th>
+           Image
+        </th>
+        <th></th>
+    </tr>
+
+@foreach (var item in Model) {
+    <tr>
+        <td>
+            @Html.DisplayFor(modelItem => item.Nazwa)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.Opis)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.Cena)
+        </td>
+        <td>
+            <a href="/Shop/produkt-detail/@item.Slug">
+                <img  src="/Zdjecia/Uploads/Produkty/@item.Id/Thumbs/@item.NazwaZdjecia"/>
+            </a>
+        </td>
+        <td>
+            <a href="/Shop/produkt-detail/@item.Slug">Details</a>
+        </td>
+    </tr>
+}
+
+</table>
